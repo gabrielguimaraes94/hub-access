@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -23,43 +22,43 @@ const PendingRequests = ({ requests, onApprove, onReject }: PendingRequestsProps
   const handleApprove = (request: AccessRequest, comments: string) => {
     onApprove(request, comments);
     toast({
-      title: 'Solicitação aprovada',
-      description: 'O usuário foi notificado e agora tem acesso à funcionalidade.',
+      title: 'Request approved',
+      description: 'The user was notified and now has access to the feature.',
     });
   };
 
   const handleReject = (request: AccessRequest, comments: string) => {
     onReject(request, comments);
     toast({
-      title: 'Solicitação rejeitada',
-      description: 'O usuário foi notificado sobre a rejeição.',
+      title: 'Request rejected',
+      description: 'The user was notified about the rejection.',
     });
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Solicitações de Acesso</h2>
-        <p className="text-gray-600">Gerencie solicitações de acesso dos usuários</p>
+        <h2 className="text-2xl font-bold">Access Requests</h2>
+        <p className="text-gray-600">Manage user access requests</p>
       </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="pending" className="relative">
-            Pendentes
+            Pending
             {pendingRequests.length > 0 && (
               <span className="absolute -top-1 -right-1 bg-mcqueen-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
                 {pendingRequests.length}
               </span>
             )}
           </TabsTrigger>
-          <TabsTrigger value="approved">Aprovadas</TabsTrigger>
-          <TabsTrigger value="rejected">Rejeitadas</TabsTrigger>
+          <TabsTrigger value="approved">Approved</TabsTrigger>
+          <TabsTrigger value="rejected">Rejected</TabsTrigger>
         </TabsList>
         
         <div className="mt-6">
           <TabsContent value="pending">
-            <h3 className="text-lg font-medium mb-4">Solicitações Pendentes</h3>
+            <h3 className="text-lg font-medium mb-4">Pending Requests</h3>
             <Separator className="mb-4" />
             
             {pendingRequests.length > 0 ? (
@@ -76,13 +75,13 @@ const PendingRequests = ({ requests, onApprove, onReject }: PendingRequestsProps
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-500">Não há solicitações pendentes no momento.</p>
+                <p className="text-gray-500">There are no pending requests at the moment.</p>
               </div>
             )}
           </TabsContent>
           
           <TabsContent value="approved">
-            <h3 className="text-lg font-medium mb-4">Solicitações Aprovadas</h3>
+            <h3 className="text-lg font-medium mb-4">Approved Requests</h3>
             <Separator className="mb-4" />
             
             {approvedRequests.length > 0 ? (
@@ -97,13 +96,13 @@ const PendingRequests = ({ requests, onApprove, onReject }: PendingRequestsProps
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-500">Não há solicitações aprovadas para exibir.</p>
+                <p className="text-gray-500">There are no approved requests to show.</p>
               </div>
             )}
           </TabsContent>
           
           <TabsContent value="rejected">
-            <h3 className="text-lg font-medium mb-4">Solicitações Rejeitadas</h3>
+            <h3 className="text-lg font-medium mb-4">Rejected Requests</h3>
             <Separator className="mb-4" />
             
             {rejectedRequests.length > 0 ? (
@@ -118,7 +117,7 @@ const PendingRequests = ({ requests, onApprove, onReject }: PendingRequestsProps
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-500">Não há solicitações rejeitadas para exibir.</p>
+                <p className="text-gray-500">There are no rejected requests to show.</p>
               </div>
             )}
           </TabsContent>

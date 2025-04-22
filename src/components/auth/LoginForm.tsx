@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -16,18 +15,17 @@ const LoginForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
       await login(username, password);
       toast({
-        title: 'Login bem-sucedido!',
-        description: 'Bem-vindo ao Hub Mcqueen.',
+        title: 'Login successful!',
+        description: 'Welcome to Mcqueen Hub.',
       });
       navigate('/dashboard');
     } catch (error) {
       toast({
-        title: 'Erro de login',
-        description: 'Credenciais inválidas. Por favor, tente novamente.',
+        title: 'Login error',
+        description: 'Invalid credentials. Please try again.',
         variant: 'destructive',
       });
     }
@@ -36,20 +34,20 @@ const LoginForm = () => {
   return (
     <Card className="w-full max-w-md shadow-xl">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Hub Mcqueen</CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">Mcqueen Hub</CardTitle>
         <CardDescription className="text-center">
-          Entre com suas credenciais para acessar o sistema
+          Enter your credentials to access the system
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="username" className="text-sm font-medium">
-              Usuário
+              Username
             </label>
             <Input
               id="username"
-              placeholder="Seu nome de usuário"
+              placeholder="Your username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -57,19 +55,19 @@ const LoginForm = () => {
           </div>
           <div className="space-y-2">
             <label htmlFor="password" className="text-sm font-medium">
-              Senha
+              Password
             </label>
             <Input
               id="password"
               type="password"
-              placeholder="Sua senha"
+              placeholder="Your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Entrando...' : 'Entrar'}
+            {isLoading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
       </CardContent>
@@ -79,11 +77,11 @@ const LoginForm = () => {
             <div className="w-full border-t border-gray-300"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Ou</span>
+            <span className="px-2 bg-white text-gray-500">Or</span>
           </div>
         </div>
         <Button variant="outline" className="w-full" disabled={isLoading}>
-          Entrar com credenciais de domínio
+          Sign in with domain credentials
         </Button>
       </CardFooter>
     </Card>

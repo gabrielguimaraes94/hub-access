@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -6,7 +5,6 @@ import { AccessRequest } from '@/types';
 import PendingRequests from './PendingRequests';
 import UserManagement from './UserManagement';
 
-// Mock access requests for development
 const mockRequests: AccessRequest[] = [
   {
     id: '1',
@@ -157,55 +155,50 @@ const AdminDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Painel de Administração</h1>
-        <p className="text-gray-600 mt-1">Gerencie usuários e solicitações de acesso</p>
+        <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+        <p className="text-gray-600 mt-1">Manage users and access requests</p>
       </div>
-      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-xl">Solicitações Pendentes</CardTitle>
-            <CardDescription>Aprovações aguardando revisão</CardDescription>
+            <CardTitle className="text-xl">Pending Requests</CardTitle>
+            <CardDescription>Approvals awaiting review</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-4xl font-bold text-mcqueen-600">{pendingCount}</p>
           </CardContent>
         </Card>
-        
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-xl">Total de Usuários</CardTitle>
-            <CardDescription>Usuários registrados no sistema</CardDescription>
+            <CardTitle className="text-xl">Total Users</CardTitle>
+            <CardDescription>Registered users in the system</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-4xl font-bold text-mcqueen-600">5</p>
           </CardContent>
         </Card>
-        
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-xl">Funcionalidades</CardTitle>
-            <CardDescription>Relatórios e ferramentas disponíveis</CardDescription>
+            <CardTitle className="text-xl">Features</CardTitle>
+            <CardDescription>Available reports and tools</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-4xl font-bold text-mcqueen-600">8</p>
           </CardContent>
         </Card>
       </div>
-      
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="requests" className="relative">
-            Solicitações
+            Requests
             {pendingCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-mcqueen-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
                 {pendingCount}
               </span>
             )}
           </TabsTrigger>
-          <TabsTrigger value="users">Usuários</TabsTrigger>
+          <TabsTrigger value="users">Users</TabsTrigger>
         </TabsList>
-        
         <div className="mt-6">
           <TabsContent value="requests">
             <PendingRequests 
@@ -214,7 +207,6 @@ const AdminDashboard = () => {
               onReject={handleRejectRequest}
             />
           </TabsContent>
-          
           <TabsContent value="users">
             <UserManagement />
           </TabsContent>

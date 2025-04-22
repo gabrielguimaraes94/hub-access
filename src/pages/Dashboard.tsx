@@ -94,20 +94,20 @@ const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Hub de Funcionalidades</h1>
-        <p className="text-gray-600 mt-1">Acesse os relatórios e ferramentas disponíveis para você</p>
+        <h1 className="text-3xl font-bold text-gray-900">Feature Hub</h1>
+        <p className="text-gray-600 mt-1">
+          Access the reports and tools available to you
+        </p>
       </div>
-      
       <div className="relative mb-6">
         <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
         <Input
-          placeholder="Buscar funcionalidades..."
+          placeholder="Search features..."
           className="pl-10"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      
       {filteredReports.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredReports.map((report) => (
@@ -120,39 +120,45 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <h3 className="text-lg font-medium text-gray-900">Nenhuma funcionalidade encontrada</h3>
-          <p className="text-gray-600 mt-1">Tente ajustar sua busca ou solicite acesso a novas funcionalidades</p>
+          <h3 className="text-lg font-medium text-gray-900">No features found</h3>
+          <p className="text-gray-600 mt-1">
+            Try adjusting your search or request access to new features
+          </p>
           <Button onClick={handleRequestAccess} className="mt-4">
             <Plus className="mr-2 h-4 w-4" />
-            Solicitar Acesso
+            Request Access
           </Button>
         </div>
       )}
-      
+
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{selectedReport?.name}</DialogTitle>
             <DialogDescription>
-              Esta funcionalidade será aberta em uma nova tela.
+              This feature will be opened in a new window.
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
-            <p className="mb-4">Categoria: <span className="font-medium">{selectedReport?.category}</span></p>
+            <p className="mb-4">
+              Category: <span className="font-medium">{selectedReport?.category}</span>
+            </p>
             <p>{selectedReport?.description}</p>
           </div>
           <div className="flex justify-end space-x-2">
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Cancelar
+              Cancel
             </Button>
-            <Button onClick={() => {
-              toast({
-                title: "Funcionalidade aberta",
-                description: `Abrindo ${selectedReport?.name}`,
-              });
-              setIsDialogOpen(false);
-            }}>
-              Continuar
+            <Button
+              onClick={() => {
+                toast({
+                  title: "Feature opened",
+                  description: `Opening ${selectedReport?.name}`,
+                });
+                setIsDialogOpen(false);
+              }}
+            >
+              Continue
             </Button>
           </div>
         </DialogContent>
@@ -160,5 +166,4 @@ const Dashboard = () => {
     </DashboardLayout>
   );
 };
-
 export default Dashboard;

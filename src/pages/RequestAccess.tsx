@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -131,70 +130,62 @@ const RequestAccess = () => {
   const handleSubmitRequest = (
     requestData: Omit<AccessRequest, 'id' | 'userId' | 'requestedAt' | 'status'>
   ) => {
-    // Create a new request
     const newRequest: AccessRequest = {
       id: `${accessRequests.length + 1}`,
-      userId: '1', // In a real app, this would be the current user's ID
+      userId: '1',
       reportId: requestData.reportId,
       justification: requestData.justification,
       status: 'pending',
       requestedAt: new Date().toISOString(),
       report: mockReports.find(r => r.id === requestData.reportId),
     };
-    
-    // Add the new request to the list
     setAccessRequests([newRequest, ...accessRequests]);
-    
     toast({
-      title: 'Solicitação enviada',
-      description: 'Sua solicitação de acesso foi enviada com sucesso!',
+      title: 'Request sent',
+      description: 'Your access request has been submitted successfully!',
     });
   };
 
   return (
     <DashboardLayout>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Solicitações de Acesso</h1>
-        <p className="text-gray-600 mt-1">Solicite acesso a novas funcionalidades ou visualize suas solicitações anteriores</p>
+        <h1 className="text-3xl font-bold text-gray-900">Access Requests</h1>
+        <p className="text-gray-600 mt-1">
+          Request access to new features or view your previous requests
+        </p>
       </div>
-      
       <Tabs defaultValue="request">
         <TabsList className="mb-6">
-          <TabsTrigger value="request">Nova Solicitação</TabsTrigger>
-          <TabsTrigger value="history">Histórico de Solicitações</TabsTrigger>
+          <TabsTrigger value="request">New Request</TabsTrigger>
+          <TabsTrigger value="history">Request History</TabsTrigger>
         </TabsList>
-        
         <TabsContent value="request" className="space-y-6">
           <RequestAccessForm
             reports={mockReports}
             userReports={mockUserReports}
             onSubmit={handleSubmitRequest}
           />
-          
           <div className="mt-8">
-            <h3 className="text-lg font-medium mb-4">Funcionalidades que você já tem acesso</h3>
+            <h3 className="text-lg font-medium mb-4">Features you already have access to</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {mockReports
                 .filter(report => mockUserReports.includes(report.id))
                 .map(report => (
-                  <div 
+                  <div
                     key={report.id}
                     className="p-4 border rounded-md bg-gray-50"
                   >
                     <h4 className="font-medium">{report.name}</h4>
                     <p className="text-sm text-gray-600 mt-1">{report.description}</p>
                   </div>
-                ))
-              }
+                ))}
             </div>
           </div>
         </TabsContent>
-        
         <TabsContent value="history">
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Suas solicitações</h3>
+            <h3 className="text-lg font-medium">Your requests</h3>
             <Separator />
-            
             {accessRequests.length > 0 ? (
               <div>
                 {accessRequests.map(request => (
@@ -203,7 +194,7 @@ const RequestAccess = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-500">Você ainda não fez nenhuma solicitação de acesso.</p>
+                <p className="text-gray-500">You haven't made any access requests yet.</p>
               </div>
             )}
           </div>

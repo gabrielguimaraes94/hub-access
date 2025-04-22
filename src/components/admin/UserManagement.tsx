@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
@@ -9,7 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Plus, Edit } from 'lucide-react';
 import { User } from '@/types';
 
-// Mock users data
 const mockUsers: User[] = [
   {
     id: '1',
@@ -86,7 +84,7 @@ const UserManagement = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
+    return new Date(dateString).toLocaleDateString('en-GB', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -96,32 +94,30 @@ const UserManagement = () => {
   const handleMakeAdmin = () => {
     if (selectedUsers.length === 0) {
       toast({
-        title: 'Erro',
-        description: 'Selecione pelo menos um usuário.',
+        title: 'Error',
+        description: 'Select at least one user.',
         variant: 'destructive',
       });
       return;
     }
-
-    // This would typically call an API to update user roles
     toast({
-      title: 'Perfis atualizados',
-      description: `${selectedUsers.length} usuário(s) agora tem perfil de administrador.`,
+      title: 'Profiles updated',
+      description: `${selectedUsers.length} user(s) are now administrators.`,
     });
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Gerenciamento de Usuários</h2>
-        <p className="text-gray-600">Visualize e gerencie usuários do sistema</p>
+        <h2 className="text-2xl font-bold">User Management</h2>
+        <p className="text-gray-600">View and manage system users</p>
       </div>
       
       <div className="flex justify-between items-center">
         <div className="relative w-64">
           <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Buscar usuários..."
+            placeholder="Search users..."
             className="pl-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -130,11 +126,11 @@ const UserManagement = () => {
         
         <div className="space-x-2">
           <Button variant="outline" onClick={handleMakeAdmin} disabled={selectedUsers.length === 0}>
-            Tornar Administrador
+            Make Admin
           </Button>
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Novo Usuário
+            New User
           </Button>
         </div>
       </div>
@@ -149,12 +145,12 @@ const UserManagement = () => {
                   onCheckedChange={handleSelectAll}
                 />
               </TableHead>
-              <TableHead>Nome</TableHead>
-              <TableHead>Usuário</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Username</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Último Acesso</TableHead>
-              <TableHead>Criado em</TableHead>
-              <TableHead>Perfil</TableHead>
+              <TableHead>Last Access</TableHead>
+              <TableHead>Created On</TableHead>
+              <TableHead>Profile</TableHead>
               <TableHead className="w-10"></TableHead>
             </TableRow>
           </TableHeader>
@@ -177,7 +173,7 @@ const UserManagement = () => {
                     {user.isAdmin ? (
                       <Badge className="bg-mcqueen-100 text-mcqueen-800">Admin</Badge>
                     ) : (
-                      <Badge variant="outline">Usuário</Badge>
+                      <Badge variant="outline">User</Badge>
                     )}
                   </TableCell>
                   <TableCell>
@@ -190,7 +186,7 @@ const UserManagement = () => {
             ) : (
               <TableRow>
                 <TableCell colSpan={8} className="text-center py-8">
-                  Nenhum usuário encontrado
+                  No users found
                 </TableCell>
               </TableRow>
             )}

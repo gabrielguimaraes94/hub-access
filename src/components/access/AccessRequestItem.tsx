@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { AccessRequest } from '@/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,12 +27,11 @@ const AccessRequestItem = ({
       'approved': 'bg-green-100 text-green-800',
       'rejected': 'bg-red-100 text-red-800',
     };
-    
     return statuses[status] || 'bg-gray-100 text-gray-800';
   };
   
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
+    return new Date(dateString).toLocaleDateString('en-GB', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -47,46 +45,46 @@ const AccessRequestItem = ({
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-bold">
-            {request.report?.name || 'Relatório não disponível'}
+            {request.report?.name || 'Report not available'}
           </CardTitle>
           <Badge className={getStatusBadge(request.status)}>
-            {request.status === 'pending' ? 'Pendente' : 
-             request.status === 'approved' ? 'Aprovado' : 'Rejeitado'}
+            {request.status === 'pending' ? 'Pending' : 
+             request.status === 'approved' ? 'Approved' : 'Rejected'}
           </Badge>
         </div>
         <CardDescription>
-          Solicitado em: {formatDate(request.requestedAt)}
+          Requested on: {formatDate(request.requestedAt)}
         </CardDescription>
       </CardHeader>
       
       <CardContent>
         <div className="space-y-3">
           <div>
-            <h4 className="text-sm font-medium text-gray-500">Justificativa</h4>
+            <h4 className="text-sm font-medium text-gray-500">Justification</h4>
             <p className="mt-1">{request.justification}</p>
           </div>
           
           {request.reviewedAt && (
             <div>
-              <h4 className="text-sm font-medium text-gray-500">Revisado em</h4>
+              <h4 className="text-sm font-medium text-gray-500">Reviewed on</h4>
               <p className="mt-1">{formatDate(request.reviewedAt)}</p>
             </div>
           )}
           
           {request.reviewerComments && (
             <div>
-              <h4 className="text-sm font-medium text-gray-500">Comentários do revisor</h4>
+              <h4 className="text-sm font-medium text-gray-500">Reviewer comments</h4>
               <p className="mt-1">{request.reviewerComments}</p>
             </div>
           )}
           
           {isAdmin && request.status === 'pending' && (
             <div>
-              <h4 className="text-sm font-medium text-gray-500">Adicionar comentários</h4>
+              <h4 className="text-sm font-medium text-gray-500">Add comments</h4>
               <Textarea 
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
-                placeholder="Comentários opcionais para o solicitante"
+                placeholder="Optional comments for requester"
                 className="mt-1"
               />
             </div>
@@ -102,7 +100,7 @@ const AccessRequestItem = ({
             onClick={() => onReject?.(request, comments)}
           >
             <X className="mr-2 h-4 w-4" />
-            Rejeitar
+            Reject
           </Button>
           <Button 
             variant="outline" 
@@ -110,7 +108,7 @@ const AccessRequestItem = ({
             onClick={() => onApprove?.(request, comments)}
           >
             <Check className="mr-2 h-4 w-4" />
-            Aprovar
+            Approve
           </Button>
         </CardFooter>
       )}

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -35,8 +34,8 @@ const RequestAccessForm = ({ reports, userReports, onSubmit }: RequestAccessForm
     
     if (!selectedReportId) {
       toast({
-        title: 'Erro',
-        description: 'Selecione um relatório para solicitar acesso.',
+        title: 'Error',
+        description: 'Please select a report to request access.',
         variant: 'destructive',
       });
       return;
@@ -44,8 +43,8 @@ const RequestAccessForm = ({ reports, userReports, onSubmit }: RequestAccessForm
     
     if (!justification) {
       toast({
-        title: 'Erro',
-        description: 'Por favor, forneça uma justificativa para a solicitação.',
+        title: 'Error',
+        description: 'Please provide a justification for the request.',
         variant: 'destructive',
       });
       return;
@@ -53,16 +52,13 @@ const RequestAccessForm = ({ reports, userReports, onSubmit }: RequestAccessForm
     
     setIsSubmitting(true);
     
-    // Prepare request data
     const requestData = {
       reportId: selectedReportId,
       justification,
     };
     
-    // Submit request
     onSubmit(requestData);
     
-    // Reset form
     setSelectedReportId(null);
     setJustification('');
     setIsSubmitting(false);
@@ -71,25 +67,25 @@ const RequestAccessForm = ({ reports, userReports, onSubmit }: RequestAccessForm
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Solicitar Acesso a Funcionalidade</CardTitle>
+        <CardTitle>Request Access to Feature</CardTitle>
         <CardDescription>
-          Selecione um relatório ou funcionalidade para solicitar acesso.
+          Select a report or feature to request access.
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="search-reports">Buscar funcionalidades</Label>
+            <Label htmlFor="search-reports">Search features</Label>
             <Input
               id="search-reports"
-              placeholder="Digite para buscar..."
+              placeholder="Type to search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           
           <div className="space-y-2">
-            <Label>Funcionalidades disponíveis para solicitação</Label>
+            <Label>Features available for request</Label>
             <div className="max-h-64 overflow-y-auto space-y-2 rounded-md border p-2">
               {filteredReports.length > 0 ? (
                 filteredReports.map((report) => (
@@ -116,7 +112,7 @@ const RequestAccessForm = ({ reports, userReports, onSubmit }: RequestAccessForm
               ) : (
                 <div className="py-8 text-center">
                   <p className="text-gray-500">
-                    Nenhuma funcionalidade encontrada ou você já tem acesso a todas as funcionalidades disponíveis.
+                    No features found, or you already have access to all available features.
                   </p>
                 </div>
               )}
@@ -124,10 +120,10 @@ const RequestAccessForm = ({ reports, userReports, onSubmit }: RequestAccessForm
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="justification">Justificativa</Label>
+            <Label htmlFor="justification">Justification</Label>
             <Textarea
               id="justification"
-              placeholder="Explique por que você precisa de acesso a esta funcionalidade..."
+              placeholder="Explain why you need access to this feature..."
               value={justification}
               onChange={(e) => setJustification(e.target.value)}
               rows={4}
@@ -137,7 +133,7 @@ const RequestAccessForm = ({ reports, userReports, onSubmit }: RequestAccessForm
         <CardFooter>
           <Button type="submit" disabled={!selectedReportId || !justification || isSubmitting}>
             <Plus className="mr-2 h-4 w-4" />
-            {isSubmitting ? 'Enviando...' : 'Enviar Solicitação'}
+            {isSubmitting ? 'Sending...' : 'Send Request'}
           </Button>
         </CardFooter>
       </form>
