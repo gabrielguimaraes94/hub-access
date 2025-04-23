@@ -1,18 +1,36 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [authStatus, setAuthStatus] = useState<string>('');
   const { login, isLoading, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Atualiza o status de autenticação
+  useEffect(() => {
+    if (isLoading) {
+      setAuthStatus('Tentando autenticação com usuário do Windows...');
+    } else if (!isAuthenticated) {
+      setAuthStatus('Autenticação Windows falhou. Por favor, faça login manualmente.');
+    }
+  }, [isLoading, isAuthenticated]);
 
   // Redirect if already authenticated
   if (isAuthenticated) {
@@ -27,7 +45,7 @@ const LoginForm = () => {
         <CardContent className="p-6">
           <div className="flex flex-col items-center justify-center space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mcqueen-600"></div>
-            <p className="text-center text-gray-600">Attempting Windows login...</p>
+            <p className="text-center text-gray-600">{authStatus}</p>
           </div>
         </CardContent>
       </Card>
@@ -52,12 +70,20 @@ const LoginForm = () => {
     }
   };
 
+  const handleDomainLogin = () => {
+    window.location.reload(); // Força uma nova tentativa de autenticação Windows
+    toast({
+      title: 'Recarregando...',
+      description: 'Tentando novamente a autenticação com credenciais de domínio.',
+    });
+  };
+
   return (
     <Card className="w-full max-w-md shadow-xl">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">Mcqueen Hub</CardTitle>
         <CardDescription className="text-center">
-          Manual login required
+          {authStatus || 'Entre com suas credenciais'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -98,12 +124,51 @@ const LoginForm = () => {
             <div className="w-full border-t border-gray-300"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or</span>
+            <span className="px-2 bg-white text-gray-500">Ou</span>
           </div>
         </div>
-        <Button variant="outline" className="w-full" disabled={isLoading}>
-          Sign in with domain credentials
-        </Button>
+        
+        <div className="flex flex-col w-full space-y-2">
+          <Button 
+            variant="outline" 
+            className="w-full" 
+            onClick={handleDomainLogin}
+          >
+            Tentar novamente com credenciais de domínio
+          </Button>
+          
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="link" size="sm" className="mx-auto">
+                Problemas com login automático?
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Informações de diagnóstico</DialogTitle>
+                <DialogDescription>
+                  Informações sobre seu ambiente que podem ajudar no diagnóstico.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 text-sm">
+                <div className="space-y-2">
+                  <p className="font-medium">Ambiente:</p>
+                  <p>Navegador: {navigator.userAgent}</p>
+                  <p>Plataforma: {navigator.platform}</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="font-medium">Suporte a recursos:</p>
+                  <p>ActiveX disponível: {typeof ActiveXObject !== 'undefined' ? 'Sim' : 'Não'}</p>
+                  <p>Variáveis de ambiente: {typeof process !== 'undefined' ? 'Disponíveis' : 'Indisponíveis'}</p>
+                </div>
+                <div className="bg-muted p-3 rounded-md">
+                  <p className="font-medium mb-1">Nota:</p>
+                  <p>O login automático funciona melhor em navegadores IE/Edge em ambientes Windows corporativos.</p>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </CardFooter>
     </Card>
   );

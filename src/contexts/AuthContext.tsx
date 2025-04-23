@@ -1,6 +1,10 @@
+
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User, AuthContextType, AuthState } from '../types';
-import { getWindowsUsername } from '../utils/windowsAuth';
+import { getWindowsIdentity, getWindowsUsername } from '../utils/windowsAuth';
+
+// Configuração de domínio da aplicação
+const APP_DOMAIN = 'mcqueen.com';
 
 // Mock initial user for development
 const mockUser: User = {
@@ -34,16 +38,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Attempt Windows authentication on mount
     const attemptWindowsAuth = async () => {
       try {
-        const windowsUsername = await getWindowsUsername();
+        console.log('Attempting Windows authentication...');
         
-        if (windowsUsername) {
-          // Auto login with Windows username
+        // Tenta obter identidade completa do Windows (usuário + domínio)
+        const windowsIdentity = await getWindowsIdentity();
+        
+        if (windowsIdentity) {
+          console.log('Windows identity found:', windowsIdentity);
+          
+          // Formata o e-mail baseado no domínio do Windows ou usa o domínio da aplicação
+          const emailDomain = windowsIdentity.domain || APP_DOMAIN;
+          const email = `${windowsIdentity.username}@${emailDomain.toLowerCase()}`;
+          
+          // Formatação opcional do nome completo (pode ser personalizado)
+          const fullName = windowsIdentity.domain 
+            ? `${windowsIdentity.username} (${windowsIdentity.domain})` 
+            : windowsIdentity.username;
+          
+          // Auto login com nome de usuário do Windows
           const user: User = {
             id: '1',
-            username: windowsUsername,
-            email: `${windowsUsername}@mcqueen.com`,
-            fullName: windowsUsername,
-            isAdmin: windowsUsername.toLowerCase().includes('admin'),
+            username: windowsIdentity.username,
+            email: email,
+            fullName: fullName,
+            isAdmin: windowsIdentity.username.toLowerCase().includes('admin'),
             lastLogin: new Date().toISOString(),
             createdAt: new Date().toISOString(),
           };
@@ -53,8 +71,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             isAuthenticated: true,
             isLoading: false,
           });
+          
+          console.log('Windows authentication successful:', user);
         } else {
-          setState(prev => ({ ...prev, isLoading: false }));
+          // Fallback para o método anterior (apenas usuário)
+          const windowsUsername = await getWindowsUsername();
+          
+          if (windowsUsername) {
+            console.log('Windows username found:', windowsUsername);
+            
+            // Auto login com nome de usuário do Windows
+            const user: User = {
+              id: '1',
+              username: windowsUsername,
+              email: `${windowsUsername}@${APP_DOMAIN}`,
+              fullName: windowsUsername,
+              isAdmin: windowsUsername.toLowerCase().includes('admin'),
+              lastLogin: new Date().toISOString(),
+              createdAt: new Date().toISOString(),
+            };
+
+            setState({
+              user,
+              isAuthenticated: true,
+              isLoading: false,
+            });
+            
+            console.log('Windows authentication successful:', user);
+          } else {
+            console.log('Windows authentication failed: No username found');
+            setState(prev => ({ ...prev, isLoading: false }));
+          }
         }
       } catch (error) {
         console.error('Windows auth error:', error);
