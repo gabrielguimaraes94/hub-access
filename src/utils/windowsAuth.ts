@@ -2,15 +2,21 @@
 export const getWindowsUsername = async (): Promise<string | null> => {
   try {
     // Try to get username through activeX (IE/Edge specific)
-    if ((window as any).ActiveXObject) {
+    if (typeof ActiveXObject !== 'undefined') {
       const network = new ActiveXObject('WScript.Network');
       return network.UserName;
     }
 
-    // For modern browsers, attempt to get through environment
-    return process.env.USERNAME || 
-           process.env.USER || 
-           null;
+    // For modern browsers in a Node.js environment
+    if (typeof process !== 'undefined' && process.env) {
+      return process.env.USERNAME || 
+             process.env.USER || 
+             null;
+    }
+    
+    // If neither method works
+    console.log('Windows username detection not available in this environment');
+    return null;
   } catch (error) {
     console.log('Unable to get Windows username:', error);
     return null;
