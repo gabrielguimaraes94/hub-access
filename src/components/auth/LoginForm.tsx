@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -9,9 +10,29 @@ import { useAuth } from '@/contexts/AuthContext';
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login, isLoading } = useAuth();
+  const { login, isLoading, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Redirect if already authenticated
+  if (isAuthenticated) {
+    navigate('/dashboard');
+    return null;
+  }
+
+  // Show loading state while attempting Windows auth
+  if (isLoading) {
+    return (
+      <Card className="w-full max-w-md shadow-xl">
+        <CardContent className="p-6">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mcqueen-600"></div>
+            <p className="text-center text-gray-600">Attempting Windows login...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +57,7 @@ const LoginForm = () => {
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">Mcqueen Hub</CardTitle>
         <CardDescription className="text-center">
-          Enter your credentials to access the system
+          Manual login required
         </CardDescription>
       </CardHeader>
       <CardContent>

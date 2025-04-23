@@ -1,6 +1,6 @@
-
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User, AuthContextType, AuthState } from '../types';
+import { getWindowsUsername } from '../utils/windowsAuth';
 
 // Mock initial user for development
 const mockUser: User = {
@@ -16,7 +16,7 @@ const mockUser: User = {
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true,
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -30,18 +30,59 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<AuthState>(initialState);
 
-  // Mock login function (will be replaced with actual API calls)
+  useEffect(() => {
+    // Attempt Windows authentication on mount
+    const attemptWindowsAuth = async () => {
+      try {
+        const windowsUsername = await getWindowsUsername();
+        
+        if (windowsUsername) {
+          // Auto login with Windows username
+          const user: User = {
+            id: '1',
+            username: windowsUsername,
+            email: `${windowsUsername}@mcqueen.com`,
+            fullName: windowsUsername,
+            isAdmin: windowsUsername.toLowerCase().includes('admin'),
+            lastLogin: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
+          };
+
+          setState({
+            user,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+        } else {
+          setState(prev => ({ ...prev, isLoading: false }));
+        }
+      } catch (error) {
+        console.error('Windows auth error:', error);
+        setState(prev => ({ ...prev, isLoading: false }));
+      }
+    };
+
+    attemptWindowsAuth();
+  }, []);
+
   const login = async (username: string, password: string) => {
     setState({ ...state, isLoading: true });
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
       // For development, accept any non-empty credentials
       if (username.trim() && password.trim()) {
+        const user: User = {
+          id: '1',
+          username: username,
+          email: `${username}@mcqueen.com`,
+          fullName: username,
+          isAdmin: username.toLowerCase().includes('admin'),
+          lastLogin: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+        };
+
         setState({
-          user: mockUser,
+          user: user,
           isAuthenticated: true,
           isLoading: false,
         });
